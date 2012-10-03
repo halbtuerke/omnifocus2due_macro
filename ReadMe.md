@@ -1,6 +1,6 @@
 # OmniFocus to Due App Keyboard Maestro Macro #
 
-The Macro sends the selected OmniFocus task to Due app.
+The Macro sends the selected [OmniFocus][1] task to [Due][2] app.
 
 Uses the following rules to set the Due Reminder date and time
 
