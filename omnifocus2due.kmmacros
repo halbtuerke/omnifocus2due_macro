@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Activate</key>
+		<string>OnceWithPalette</string>
+		<key>AddToMacroPalette</key>
+		<false/>
+		<key>AddToStatusMenu</key>
+		<false/>
+		<key>IsActive</key>
+		<true/>
+		<key>KeyCode</key>
+		<integer>99</integer>
+		<key>Macros</key>
+		<array>
+			<dict>
+				<key>Actions</key>
+				<array>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>Comment</string>
+						<key>Text</key>
+						<string>Assumption: If the start date is in the future, the due date is don't care.
+
+NB: If the start date is in the past there is nothing to remind you of in the future.
+
+NB: If both the start date and the due date are in the future, I assume I want to be alerted to the start of the task before the due date of the task</string>
+						<key>Title</key>
+						<string>Get Task Start Date</string>
+					</dict>
+					<dict>
+						<key>Count</key>
+						<integer>1</integer>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>ExecuteMacro</string>
+						<key>MacroUID</key>
+						<string>F0E283A9-23C9-4150-B6ED-A7415170232A</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>SetVariableToText</string>
+						<key>Text</key>
+						<string>%Delete%</string>
+						<key>Variable</key>
+						<string>Tmp</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>Comment</string>
+						<key>Text</key>
+						<string>Outcome: We're done
+
+NB: There is a condition that I'm not testing for: 
+
+A start date in the future and a due date in the past.
+
+If you run into this case, you probably ought to spend more time reviewing your lists.</string>
+						<key>Title</key>
+						<string>Test: IF start date exists AND it is the future</string>
+					</dict>
+					<dict>
+						<key>Conditions</key>
+						<dict>
+							<key>ConditionList</key>
+							<array>
+								<dict>
+									<key>ConditionType</key>
+									<string>Variable</string>
+									<key>Variable</key>
+									<string>OFTaskStartDate</string>
+									<key>VariableConditionType</key>
+									<string>IsNot</string>
+									<key>VariableValue</key>
+									<string>%Delete%</string>
+								</dict>
+								<dict>
+									<key>ConditionType</key>
+									<string>Script</string>
+									<key>Path</key>
+									<string></string>
+									<key>ScriptConditionSourceType</key>
+									<string>ShellScriptText</string>
+									<key>ScriptConditionType</key>
+									<string>Is</string>
+									<key>ScriptResult</key>
+									<string>1</string>
+									<key>ScriptTerminationStatus</key>
+									<integer>1</integer>
+									<key>ScriptText</key>
+									<string>#!/usr/bin/python
+
+from datetime import datetime
+import os
+
+# Get current date and time
+
+today = datetime.today()
+
+# Get OmniFocus task start date
+test_date =  os.getenv('KMVAR_OFTaskStartDate')
+
+# Convert OmniFocus start date string to date object
+# http://docs.python.org/library/datetime.html#strftime-and-strptime-behavior
+
+date_object = datetime.strptime(test_date, '%A, %B %d, %Y %I:%M:%S %p')
+
+# Test if the given OmniFocus start date is in the past
+
+if date_object &lt;  today:
+    print '0'
+else:
+    print '1'</string>
+								</dict>
+							</array>
+							<key>ConditionListMatch</key>
+							<string>All</string>
+						</dict>
+						<key>ElseActions</key>
+						<array>
+							<dict>
+								<key>IsActive</key>
+								<true/>
+								<key>IsDisclosed</key>
+								<false/>
+								<key>MacroActionType</key>
+								<string>Comment</string>
+								<key>Text</key>
+								<string>The Task either has no start date, or the start date is in the past.</string>
+								<key>Title</key>
+								<string>Get Task Due Date</string>
+							</dict>
+							<dict>
+								<key>Count</key>
+								<integer>1</integer>
+								<key>IsActive</key>
+								<true/>
+								<key>IsDisclosed</key>
+								<true/>
+								<key>MacroActionType</key>
+								<string>ExecuteMacro</string>
+								<key>MacroUID</key>
+								<string>A333C23D-1E13-4699-9520-676B5D22F311</string>
+								<key>TimeOutAbortsMacro</key>
+								<true/>
+							</dict>
+							<dict>
+								<key>IsActive</key>
+								<true/>
+								<key>IsDisclosed</key>
+								<false/>
+								<key>MacroActionType</key>
+								<string>Comment</string>
+								<key>Text</key>
+								<string>IF True: We're done
+
+IF False: We know:
+ 
+* the start date is invalid
+* the due date is invalid
+
+We'll ask the user for the date to use for the Due reminder.
+
+NB: Due parses natural language.
+
+NB: We really don't need to do this if you don't want to include a link to the OmniFocus task.</string>
+								<key>Title</key>
+								<string>Test: IF Due date exists AND it is the future</string>
+							</dict>
+							<dict>
+								<key>Conditions</key>
+								<dict>
+									<key>ConditionList</key>
+									<array>
+										<dict>
+											<key>ConditionType</key>
+											<string>Variable</string>
+											<key>Variable</key>
+											<string>OFTaskDueDate</string>
+											<key>VariableConditionType</key>
+											<string>IsNot</string>
+											<key>VariableValue</key>
+											<string>%Delete%</string>
+										</dict>
+										<dict>
+											<key>ConditionType</key>
+											<string>Script</string>
+											<key>Path</key>
+											<string></string>
+											<key>ScriptConditionSourceType</key>
+											<string>ShellScriptText</string>
+											<key>ScriptConditionType</key>
+											<string>Is</string>
+											<key>ScriptResult</key>
+											<string>1</string>
+											<key>ScriptTerminationStatus</key>
+											<integer>1</integer>
+											<key>ScriptText</key>
+											<string>#!/usr/bin/python
+
+from datetime import datetime
+import os
+
+# Get current date and time
+
+today = datetime.today()
+
+# Get OmniFocus task due date
+test_date =  os.getenv('KMVAR_OFTaskDueDate')
+
+# Convert OmniFocus due date string to date object
+# http://docs.python.org/library/datetime.html#strftime-and-strptime-behavior
+
+date_object = datetime.strptime(test_date, '%A, %B %d, %Y %I:%M:%S %p')
+
+# Test if the given OmniFocus due date is in the past
+
+if date_object &lt;  today:
+    print '0'
+else:
+    print '1'</string>
+										</dict>
+									</array>
+									<key>ConditionListMatch</key>
+									<string>All</string>
+								</dict>
+								<key>ElseActions</key>
+								<array>
+									<dict>
+										<key>Buttons</key>
+										<array>
+											<dict>
+												<key>Button</key>
+												<string>OK</string>
+											</dict>
+											<dict>
+												<key>Button</key>
+												<string>Cancel</string>
+												<key>Cancel</key>
+												<false/>
+											</dict>
+										</array>
+										<key>IsActive</key>
+										<true/>
+										<key>IsDisclosed</key>
+										<true/>
+										<key>MacroActionType</key>
+										<string>PromptForUserInput</string>
+										<key>Prompt</key>
+										<string>Please enter the due date/time for the reminder</string>
+										<key>ResultButtonVariable</key>
+										<string>Result Button</string>
+										<key>TimeOutAbortsMacro</key>
+										<true/>
+										<key>Title</key>
+										<string>Due Reminder Date</string>
+										<key>Variables</key>
+										<array>
+											<dict>
+												<key>Default</key>
+												<string></string>
+												<key>Variable</key>
+												<string>Tmp</string>
+											</dict>
+										</array>
+									</dict>
+								</array>
+								<key>IsActive</key>
+								<true/>
+								<key>IsDisclosed</key>
+								<true/>
+								<key>MacroActionType</key>
+								<string>IfThenElse</string>
+								<key>ThenActions</key>
+								<array>
+									<dict>
+										<key>IsActive</key>
+										<true/>
+										<key>IsDisclosed</key>
+										<true/>
+										<key>MacroActionType</key>
+										<string>SetVariableToText</string>
+										<key>Text</key>
+										<string>%Variable%OFTaskDueDate%</string>
+										<key>Variable</key>
+										<string>Tmp</string>
+									</dict>
+								</array>
+								<key>TimeOutAbortsMacro</key>
+								<true/>
+							</dict>
+						</array>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>IfThenElse</string>
+						<key>ThenActions</key>
+						<array>
+							<dict>
+								<key>IsActive</key>
+								<true/>
+								<key>IsDisclosed</key>
+								<true/>
+								<key>MacroActionType</key>
+								<string>SetVariableToText</string>
+								<key>Text</key>
+								<string>%Variable%OFTaskStartDate%</string>
+								<key>Variable</key>
+								<string>Tmp</string>
+							</dict>
+						</array>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>Comment</string>
+						<key>Text</key>
+						<string>NB: We could test to make sure the task text is not empty, but we'll assume the user is not an idiot.</string>
+						<key>Title</key>
+						<string>Get the task text and URI</string>
+					</dict>
+					<dict>
+						<key>Count</key>
+						<integer>1</integer>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>ExecuteMacro</string>
+						<key>MacroUID</key>
+						<string>CA5CC486-EE9A-408D-A115-C984B14C192F</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Count</key>
+						<integer>1</integer>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>ExecuteMacro</string>
+						<key>MacroUID</key>
+						<string>2F8DF604-5D0D-4568-BFB5-88AED84609A7</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>Comment</string>
+						<key>Text</key>
+						<string>NB: I add several spaces to the URL we're sending to Due. I like the url to be on the next line.</string>
+						<key>Title</key>
+						<string>Format the URL</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>JustDisplay</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>SetClipboardToText</string>
+						<key>Text</key>
+						<string>due:///add?title=%Variable%OFTaskName% %Variable%Tmp%                                                                                                                                                                                                                                                                                                                                            %Variable%OFTaskURL%</string>
+					</dict>
+					<dict>
+						<key>Action</key>
+						<string>PercentEncodeForURL</string>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>FilterClipboard</string>
+					</dict>
+					<dict>
+						<key>Application</key>
+						<dict>
+							<key>BundleIdentifier</key>
+							<string>com.apple.finder</string>
+							<key>Creator</key>
+							<integer>1296122707</integer>
+							<key>FileType</key>
+							<integer>1179534418</integer>
+							<key>Name</key>
+							<string>Finder</string>
+							<key>NewFile</key>
+							<string>/System/Library/CoreServices/Finder.app</string>
+						</dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDefaultApplication</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>OpenURL</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+						<key>URL</key>
+						<string>%CurrentClipboard%</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>KeyCode</key>
+						<integer>51</integer>
+						<key>MacroActionType</key>
+						<string>SimulateKeystroke</string>
+						<key>Modifiers</key>
+						<integer>0</integer>
+						<key>ReleaseAll</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>DeletePastClipboard</string>
+						<key>Past</key>
+						<integer>0</integer>
+						<key>PastExpression</key>
+						<string>0</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>Comment</string>
+						<key>Text</key>
+						<string></string>
+						<key>Title</key>
+						<string>Delete all Keyboard Maestro variables</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>SetVariableToText</string>
+						<key>Text</key>
+						<string>%Delete%</string>
+						<key>Variable</key>
+						<string>OFTaskName</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>SetVariableToText</string>
+						<key>Text</key>
+						<string>%Delete%</string>
+						<key>Variable</key>
+						<string>OFTaskDueDate</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>SetVariableToText</string>
+						<key>Text</key>
+						<string>%Delete%</string>
+						<key>Variable</key>
+						<string>OFTaskStartDate</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>SetVariableToText</string>
+						<key>Text</key>
+						<string>%Delete%</string>
+						<key>Variable</key>
+						<string>OFTaskURL</string>
+					</dict>
+					<dict>
+						<key>IsActive</key>
+						<true/>
+						<key>IsDisclosed</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>SetVariableToText</string>
+						<key>Text</key>
+						<string>%Delete%</string>
+						<key>Variable</key>
+						<string>Tmp</string>
+					</dict>
+				</array>
+				<key>IsActive</key>
+				<true/>
+				<key>Name</key>
+				<string>OmniFocus to Due Macro</string>
+				<key>Triggers</key>
+				<array>
+					<dict>
+						<key>FireType</key>
+						<string>Pressed</string>
+						<key>KeyCode</key>
+						<integer>109</integer>
+						<key>MacroTriggerType</key>
+						<string>HotKey</string>
+						<key>Modifiers</key>
+						<integer>0</integer>
+						<key>TriggerRepeat</key>
+						<false/>
+					</dict>
+				</array>
+				<key>UID</key>
+				<string>B9ED920B-430B-49FC-A5E6-F0175FB24F59</string>
+			</dict>
+		</array>
+		<key>Modifiers</key>
+		<integer>0</integer>
+		<key>Name</key>
+		<string>Hot Pallet - Due App (F3)</string>
+		<key>UID</key>
+		<string>B92E837F-9FEC-4287-AC11-71E6362E430F</string>
+	</dict>
+</array>
+</plist>
