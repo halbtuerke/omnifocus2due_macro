@@ -10,6 +10,10 @@ Uses the following rules to set the Due Reminder date and time:
 
 The macro also appends the task’s url to the reminder so you can quickly return to the task upon completing the Due app reminder.
 
+## Dependencies ##
+
+* My [OmniFocus Macro Functions][3]
 
 [1]: http://www.omnigroup.com/products/omnifocus/
 [2]: http://www.dueapp.com
+[3]: https://github.com/ChewingPencils/keyboard-maestro-omnifocus-functions
