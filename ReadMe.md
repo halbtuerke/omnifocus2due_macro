@@ -1,3 +1,5 @@
+**This fork makes sure that the embedded python scripts work with german locale.**
+
 # OmniFocus to Due App Keyboard Maestro Macro #
 
 The Macro sends the selected [OmniFocus][1] task to [Due][2] app.
